@@ -1,15 +1,20 @@
 # 📹 Media Info Parser
 
-A web-based media information parsing tool built with React and FFmpeg WebAssembly.
+A web-based media information parsing tool built with React and HTML5 Web APIs.
 
 ## 🌟 Features
 
 - **Web-based**: No installation required, runs entirely in the browser
-- **FFmpeg WebAssembly**: Powerful media analysis using FFmpeg compiled to WebAssembly
+- **Native Browser APIs**: Uses HTML5 Media APIs for fast and efficient parsing
 - **File Upload**: Drag and drop or click to upload media files
-- **Media Information**: Extract detailed information from video and audio files
+- **Media Information**: Extract detailed information from video and audio files including:
+  - File name, size, and type
+  - Duration (for audio/video files)
+  - Resolution and aspect ratio (for video files)
+  - MIME type
+  - Last modified date
 - **Modern UI**: Beautiful, responsive interface with smooth animations
-- **Privacy-focused**: All processing happens locally in your browser
+- **Privacy-focused**: All processing happens locally in your browser - no data is uploaded to any server
 
 ## 🚀 Quick Start
 
@@ -52,31 +57,35 @@ The built files will be in the `dist` directory.
 
 - **Frontend Framework**: React 19
 - **Build Tool**: Vite 7
-- **Media Processing**: FFmpeg WebAssembly (@ffmpeg/ffmpeg)
+- **Media Processing**: HTML5 Media APIs (native browser capabilities)
 - **Styling**: CSS3 with modern features
 
 ## 📖 Usage
 
-1. Wait for FFmpeg to load (first-time loading may take a few moments)
+1. Open the application in your web browser
 2. Click on the upload area or drag and drop a media file
 3. Click "Parse Media Info" to analyze the file
-4. View the extracted media information
+4. View the extracted media information including duration, resolution, and more
 5. Click "Parse Another File" to analyze a different file
 
 ## 🎨 Features in Detail
 
 ### Supported File Types
 
-- Video files: MP4, AVI, MOV, MKV, WebM, etc.
-- Audio files: MP3, WAV, AAC, FLAC, OGG, etc.
+- Video files: MP4, AVI, MOV, MKV, WebM, and more
+- Audio files: MP3, WAV, AAC, FLAC, OGG, and more
+
+Any media format supported by your browser will work with this tool.
 
 ### Information Extracted
 
-- File name
-- File size
-- File type/MIME type
-- Last modified date
-- Media metadata (when available)
+- **File name**: Original filename
+- **File size**: Size in bytes, KB, MB, or GB
+- **File type**: MIME type of the file
+- **Duration**: Length of the media (for audio/video)
+- **Resolution**: Width x Height (for video files)
+- **Aspect Ratio**: Calculated aspect ratio (for video files)
+- **Last modified**: Date and time the file was last modified
 
 ## 🔧 Development
 
@@ -102,6 +111,14 @@ MediaInfo/
 └── vite.config.js   # Vite configuration
 ```
 
+## 📸 Screenshots
+
+### Main Interface
+![Media Info Parser Interface](https://github.com/user-attachments/assets/62101fb2-c0fc-4e12-a089-b6222c957748)
+
+### Parsed Results
+![Parsed Media Information](https://github.com/user-attachments/assets/92cf208d-cfe2-4782-ac91-bb08317a76aa)
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -112,7 +129,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 🙏 Acknowledgments
 
-- [FFmpeg](https://ffmpeg.org/) - The powerful multimedia framework
-- [FFmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) - FFmpeg compiled to WebAssembly
 - [React](https://react.dev/) - The library for web and native user interfaces
 - [Vite](https://vitejs.dev/) - Next generation frontend tooling
+- HTML5 Media APIs - Native browser capabilities for media processing

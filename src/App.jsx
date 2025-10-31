@@ -1,48 +1,11 @@
-import { useState, useRef, useEffect } from 'react'
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { toBlobURL, fetchFile } from '@ffmpeg/util'
+import { useState } from 'react'
 import './App.css'
 
 function App() {
   const [file, setFile] = useState(null)
   const [mediaInfo, setMediaInfo] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [loadingFFmpeg, setLoadingFFmpeg] = useState(true)
   const [error, setError] = useState(null)
-  const [progress, setProgress] = useState('')
-  const ffmpegRef = useRef(new FFmpeg())
-
-  useEffect(() => {
-    loadFFmpeg()
-  }, [])
-
-  const loadFFmpeg = async () => {
-    const ffmpeg = ffmpegRef.current
-    try {
-      setLoadingFFmpeg(true)
-      
-      ffmpeg.on('log', ({ message }) => {
-        console.log(message)
-      })
-
-      ffmpeg.on('progress', ({ progress: prog }) => {
-        setProgress(`Processing: ${Math.round(prog * 100)}%`)
-      })
-
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      })
-      
-      setLoadingFFmpeg(false)
-      setError(null)
-    } catch (err) {
-      console.error('Failed to load FFmpeg:', err)
-      setError('Failed to load FFmpeg. Please refresh the page.')
-      setLoadingFFmpeg(false)
-    }
-  }
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
@@ -59,56 +22,68 @@ function App() {
       return
     }
 
-    const ffmpeg = ffmpegRef.current
     setLoading(true)
     setError(null)
-    setProgress('Reading file...')
 
     try {
-      const fileName = file.name
-      await ffmpeg.writeFile(fileName, await fetchFile(file))
-      
-      setProgress('Analyzing media...')
-      
-      // Run ffprobe-like command to get media information
-      await ffmpeg.exec([
-        '-i', fileName,
-        '-f', 'null',
-        '-'
-      ])
+      const fileURL = URL.createObjectURL(file)
+      const isVideo = file.type.startsWith('video/')
+      const isAudio = file.type.startsWith('audio/')
 
-      // Get the logs which contain media info
-      const logs = []
-      ffmpeg.on('log', ({ message }) => {
-        logs.push(message)
-      })
-
-      // Parse media info from FFmpeg output
       const info = {
         fileName: file.name,
         fileSize: formatFileSize(file.size),
         fileType: file.type || 'Unknown',
+        mimeType: file.type,
         lastModified: new Date(file.lastModified).toLocaleString(),
       }
 
+      // For video files, try to extract metadata
+      if (isVideo || isAudio) {
+        const mediaElement = isVideo ? document.createElement('video') : document.createElement('audio')
+        mediaElement.preload = 'metadata'
+        
+        await new Promise((resolve) => {
+          mediaElement.onloadedmetadata = () => {
+            if (mediaElement.duration && mediaElement.duration !== Infinity) {
+              info.duration = formatDuration(mediaElement.duration)
+            }
+            
+            if (isVideo) {
+              info.width = mediaElement.videoWidth || 'N/A'
+              info.height = mediaElement.videoHeight || 'N/A'
+              if (mediaElement.videoWidth && mediaElement.videoHeight) {
+                info.resolution = `${mediaElement.videoWidth}x${mediaElement.videoHeight}`
+                info.aspectRatio = calculateAspectRatio(mediaElement.videoWidth, mediaElement.videoHeight)
+              }
+            }
+            
+            resolve()
+          }
+          
+          mediaElement.onerror = () => {
+            resolve() // Continue even if metadata loading fails
+          }
+          
+          mediaElement.src = fileURL
+        })
+        
+        URL.revokeObjectURL(fileURL)
+      }
+
       setMediaInfo(info)
-      setProgress('Complete!')
-      
-      // Clean up
-      await ffmpeg.deleteFile(fileName)
     } catch (err) {
       console.error('Error parsing media:', err)
-      // Even if ffmpeg "fails", it often outputs media info
-      // Extract basic info from file
+      // Still show basic info on error
       const basicInfo = {
         fileName: file.name,
         fileSize: formatFileSize(file.size),
         fileType: file.type || 'Unknown',
+        mimeType: file.type,
         lastModified: new Date(file.lastModified).toLocaleString(),
-        note: 'Basic file information (FFmpeg analysis completed)'
+        note: 'Basic file information only'
       }
       setMediaInfo(basicInfo)
-      setProgress('Analysis complete!')
     } finally {
       setLoading(false)
     }
@@ -117,31 +92,32 @@ function App() {
   const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+  }
+
+  const formatDuration = (seconds) => {
+    const hrs = Math.floor(seconds / 3600)
+    const mins = Math.floor((seconds % 3600) / 60)
+    const secs = Math.floor(seconds % 60)
+    
+    if (hrs > 0) {
+      return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    }
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const calculateAspectRatio = (width, height) => {
+    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b)
+    const divisor = gcd(width, height)
+    return `${width / divisor}:${height / divisor}`
   }
 
   const resetApp = () => {
     setFile(null)
     setMediaInfo(null)
     setError(null)
-    setProgress('')
-  }
-
-  if (loadingFFmpeg) {
-    return (
-      <div className="app">
-        <div className="container">
-          <h1>Media Info Parser</h1>
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Loading FFmpeg WASM...</p>
-            <p className="loading-note">This may take a few moments on first load</p>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -149,7 +125,7 @@ function App() {
       <div className="container">
         <header className="header">
           <h1>📹 Media Info Parser</h1>
-          <p className="subtitle">Parse media file information using FFmpeg WebAssembly</p>
+          <p className="subtitle">Parse media file information using Web APIs</p>
         </header>
 
         <div className="upload-section">
@@ -181,7 +157,7 @@ function App() {
         {loading && (
           <div className="progress-section">
             <div className="spinner"></div>
-            <p>{progress}</p>
+            <p>Analyzing media file...</p>
           </div>
         )}
 
@@ -212,6 +188,30 @@ function App() {
                 <span className="info-label">File Type:</span>
                 <span className="info-value">{mediaInfo.fileType}</span>
               </div>
+              {mediaInfo.mimeType && (
+                <div className="info-item">
+                  <span className="info-label">MIME Type:</span>
+                  <span className="info-value">{mediaInfo.mimeType}</span>
+                </div>
+              )}
+              {mediaInfo.duration && (
+                <div className="info-item">
+                  <span className="info-label">Duration:</span>
+                  <span className="info-value">{mediaInfo.duration}</span>
+                </div>
+              )}
+              {mediaInfo.resolution && (
+                <div className="info-item">
+                  <span className="info-label">Resolution:</span>
+                  <span className="info-value">{mediaInfo.resolution}</span>
+                </div>
+              )}
+              {mediaInfo.aspectRatio && (
+                <div className="info-item">
+                  <span className="info-label">Aspect Ratio:</span>
+                  <span className="info-value">{mediaInfo.aspectRatio}</span>
+                </div>
+              )}
               <div className="info-item">
                 <span className="info-label">Last Modified:</span>
                 <span className="info-value">{mediaInfo.lastModified}</span>
@@ -227,7 +227,8 @@ function App() {
         )}
 
         <footer className="footer">
-          <p>Built with React & FFmpeg WASM</p>
+          <p>Built with React & Web APIs</p>
+          <p className="footer-note">Using HTML5 Media APIs for metadata extraction</p>
         </footer>
       </div>
     </div>

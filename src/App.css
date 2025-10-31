@@ -258,6 +258,12 @@
   font-size: 0.9rem;
 }
 
+.footer-note {
+  font-size: 0.8rem;
+  margin-top: 5px;
+  color: #bbb;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 20px;
