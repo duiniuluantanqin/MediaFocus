@@ -1,6 +1,8 @@
-# 📹 Media Info Parser
+# 📹 MediaFocus
 
 A web-based media information parsing tool built with React and FFmpeg WebAssembly.
+
+English | [简体中文](README.zh-CN.md)
 
 ## 🌟 Features
 
@@ -28,8 +30,8 @@ A web-based media information parsing tool built with React and FFmpeg WebAssemb
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/duiniuluantanqin/MediaInfo.git
-cd MediaInfo
+git clone https://github.com/duiniuluantanqin/MediaFocus.git
+cd MediaFocus
 ```
 
 2. Install dependencies:
@@ -65,7 +67,7 @@ The built files will be in the `dist` directory.
 
 1. Wait for FFmpeg to load (first-time loading may take a few moments)
 2. Click on the upload area or drag and drop a media file
-3. Click "Parse Media Info" to analyze the file
+3. Click "Analyze Media" to analyze the file
 4. View the extracted media information including codecs, resolution, bitrate, and more
 5. Click "Parse Another File" to analyze a different file
 
@@ -105,7 +107,7 @@ FFmpeg supports virtually all media formats, making this tool highly versatile.
 ### Project Structure
 
 ```
-MediaInfo/
+MediaFocus/
 ├── public/
 │   └── ffmpeg/       # FFmpeg WASM core files
 ├── src/

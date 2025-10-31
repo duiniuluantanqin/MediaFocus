@@ -194,7 +194,7 @@ function App() {
     return (
       <div className="app">
         <div className="container">
-          <h1>Media Info Parser</h1>
+          <h1>MediaFocus</h1>
           <div className="loading-container">
             <div className="spinner"></div>
             <p>Loading FFmpeg WASM...</p>
@@ -209,7 +209,7 @@ function App() {
     <div className="app">
       <div className="container">
         <header className="header">
-          <h1>📹 Media Info Parser</h1>
+          <h1>📹 MediaFocus</h1>
           <p className="subtitle">Parse media file information using FFmpeg WebAssembly</p>
         </header>
 
@@ -234,7 +234,7 @@ function App() {
               disabled={loading}
               className="parse-button"
             >
-              {loading ? 'Analyzing...' : 'Parse Media Info'}
+              {loading ? 'Analyzing...' : 'Analyze Media'}
             </button>
           </div>
         )}
