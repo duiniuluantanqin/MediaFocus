@@ -1,18 +1,19 @@
 # 📹 Media Info Parser
 
-A web-based media information parsing tool built with React and HTML5 Web APIs.
+A web-based media information parsing tool built with React and FFmpeg WebAssembly.
 
 ## 🌟 Features
 
 - **Web-based**: No installation required, runs entirely in the browser
-- **Native Browser APIs**: Uses HTML5 Media APIs for fast and efficient parsing
-- **File Upload**: Drag and drop or click to upload media files
-- **Media Information**: Extract detailed information from video and audio files including:
+- **FFmpeg WebAssembly**: Powerful media analysis using FFmpeg compiled to WebAssembly
+- **Comprehensive Parsing**: Extract detailed information from video and audio files including:
   - File name, size, and type
-  - Duration (for audio/video files)
-  - Resolution and aspect ratio (for video files)
-  - MIME type
-  - Last modified date
+  - Duration, resolution, and aspect ratio
+  - Video/Audio codecs
+  - Frame rate and bitrate
+  - Sample rate for audio
+  - And more metadata
+- **File Upload**: Drag and drop or click to upload media files
 - **Modern UI**: Beautiful, responsive interface with smooth animations
 - **Privacy-focused**: All processing happens locally in your browser - no data is uploaded to any server
 
@@ -57,34 +58,39 @@ The built files will be in the `dist` directory.
 
 - **Frontend Framework**: React 19
 - **Build Tool**: Vite 7
-- **Media Processing**: HTML5 Media APIs (native browser capabilities)
+- **Media Processing**: FFmpeg WebAssembly (@ffmpeg/ffmpeg)
 - **Styling**: CSS3 with modern features
 
 ## 📖 Usage
 
-1. Open the application in your web browser
+1. Wait for FFmpeg to load (first-time loading may take a few moments)
 2. Click on the upload area or drag and drop a media file
 3. Click "Parse Media Info" to analyze the file
-4. View the extracted media information including duration, resolution, and more
+4. View the extracted media information including codecs, resolution, bitrate, and more
 5. Click "Parse Another File" to analyze a different file
 
 ## 🎨 Features in Detail
 
 ### Supported File Types
 
-- Video files: MP4, AVI, MOV, MKV, WebM, and more
-- Audio files: MP3, WAV, AAC, FLAC, OGG, and more
+- Video files: MP4, AVI, MOV, MKV, WebM, FLV, and more
+- Audio files: MP3, WAV, AAC, FLAC, OGG, M4A, and more
 
-Any media format supported by your browser will work with this tool.
+FFmpeg supports virtually all media formats, making this tool highly versatile.
 
 ### Information Extracted
 
 - **File name**: Original filename
 - **File size**: Size in bytes, KB, MB, or GB
 - **File type**: MIME type of the file
-- **Duration**: Length of the media (for audio/video)
+- **Duration**: Length of the media
 - **Resolution**: Width x Height (for video files)
 - **Aspect Ratio**: Calculated aspect ratio (for video files)
+- **Video Codec**: Encoding format for video stream
+- **Audio Codec**: Encoding format for audio stream
+- **Frame Rate**: FPS for video files
+- **Bitrate**: Data rate of the media
+- **Sample Rate**: Audio sample rate in Hz
 - **Last modified**: Date and time the file was last modified
 
 ## 🔧 Development
@@ -100,7 +106,8 @@ Any media format supported by your browser will work with this tool.
 
 ```
 MediaInfo/
-├── public/           # Static assets
+├── public/
+│   └── ffmpeg/       # FFmpeg WASM core files
 ├── src/
 │   ├── App.jsx      # Main application component
 │   ├── App.css      # Application styles
@@ -110,14 +117,6 @@ MediaInfo/
 ├── package.json     # Dependencies and scripts
 └── vite.config.js   # Vite configuration
 ```
-
-## 📸 Screenshots
-
-### Main Interface
-![Media Info Parser Interface](https://github.com/user-attachments/assets/62101fb2-c0fc-4e12-a089-b6222c957748)
-
-### Parsed Results
-![Parsed Media Information](https://github.com/user-attachments/assets/92cf208d-cfe2-4782-ac91-bb08317a76aa)
 
 ## 📝 License
 
@@ -129,6 +128,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 🙏 Acknowledgments
 
+- [FFmpeg](https://ffmpeg.org/) - The powerful multimedia framework
+- [FFmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) - FFmpeg compiled to WebAssembly
 - [React](https://react.dev/) - The library for web and native user interfaces
 - [Vite](https://vitejs.dev/) - Next generation frontend tooling
-- HTML5 Media APIs - Native browser capabilities for media processing
