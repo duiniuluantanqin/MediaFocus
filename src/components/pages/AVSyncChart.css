@@ -1,0 +1,22 @@
+.avsync-chart {
+  width: 100%;
+}
+
+.legend-line {
+  width: 30px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.legend-line.video {
+  background: #764ba2;
+}
+
+.legend-line.sync {
+  background: #4caf50;
+}
+
+.legend-line.audio {
+  background: #764ba2;
+}
+
