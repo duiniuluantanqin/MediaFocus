@@ -59,11 +59,13 @@ function AVSyncChart({ frameData, language }) {
     const chartWidth = (width - padding * 2) * zoom
     const chartHeight = height - padding * 2
 
-    // Simulate A/V sync data
-    const syncData = frameData.map((frame, index) => {
-      // Simulate sync difference (positive means video ahead, negative means audio ahead)
-      const drift = Math.sin(index / 20) * 15 + Math.random() * 5 - 2.5
-      return drift
+    // Calculate A/V sync data from frame timestamps
+    // Note: This requires both audio and video timestamps
+    // For now, we'll show a message that this feature requires audio frame data
+    const syncData = frameData.map((frame) => {
+      // Real A/V sync would compare video PTS with audio PTS
+      // Since we only have video frames, we can't calculate real sync
+      return 0
     })
 
     const maxSync = Math.max(...syncData.map(Math.abs))

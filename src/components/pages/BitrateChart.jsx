@@ -53,13 +53,19 @@ function BitrateChart({ frameData, language }) {
     const chartWidth = (width - padding * 2) * zoom
     const chartHeight = height - padding * 2
 
-    // Get bitrate values (simulate if not available)
-    const bitrateValues = frameData.map((frame, index) => {
-      // Simulate bitrate based on frame type and size
-      const baseRate = 500
-      const variation = Math.sin(index / 10) * 200
-      const typeMultiplier = frame.type === 'I' ? 2 : frame.type === 'P' ? 1.2 : 0.8
-      return baseRate + variation * typeMultiplier
+    // Get bitrate values from frame data
+    const bitrateValues = frameData.map((frame) => {
+      // Extract numeric bitrate value
+      if (frame.bitrate && typeof frame.bitrate === 'string') {
+        const match = frame.bitrate.match(/(\d+)/)
+        return match ? parseInt(match[1]) : 0
+      }
+      // Calculate from size if available
+      if (frame.sizeBytes) {
+        // Assume 30fps for estimation
+        return Math.round((frame.sizeBytes * 8 * 30) / 1000)
+      }
+      return 0
     })
 
     const maxBitrate = Math.max(...bitrateValues)

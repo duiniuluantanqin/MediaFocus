@@ -3,63 +3,94 @@
 }
 
 .page-title {
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   color: var(--text-color);
-  margin: 0 0 30px 0;
+  margin: 0 0 15px 0;
   font-weight: 600;
 }
 
-.overview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+.overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.overview-item {
+.info-section {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s ease;
+  border-radius: 3px;
+  overflow: hidden;
 }
 
-.overview-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: var(--primary-color);
-}
-
-.item-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.item-icon {
-  font-size: 1.3rem;
-}
-
-.item-label {
+.section-title {
   font-size: 0.9rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.item-value {
-  font-size: 1.1rem;
   color: var(--text-color);
   font-weight: 600;
+  margin: 0;
+  padding: 6px 10px;
+  background: var(--table-header-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.info-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.15s ease;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-right: 15px;
+  min-width: 110px;
+}
+
+.info-value {
+  font-size: 0.8rem;
+  color: var(--text-color);
+  font-weight: 400;
+  text-align: left;
   word-break: break-word;
 }
 
 @media (max-width: 768px) {
-  .overview-grid {
-    grid-template-columns: 1fr;
+  .page-title {
+    font-size: 1.3rem;
   }
 
-  .page-title {
-    font-size: 1.5rem;
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px 12px;
+  }
+
+  .info-label {
+    margin-right: 0;
+    min-width: auto;
+  }
+
+  .info-value {
+    text-align: left;
   }
 }
 
